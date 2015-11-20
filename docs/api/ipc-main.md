@@ -19,13 +19,12 @@ processes:
 
 ```javascript
 // In main process.
-const ipcMain = require('electron').ipcMain;
-ipcMain.on('asynchronous-message', function(event, arg) {
+require('ipc').on('asynchronous-message', function(event, arg) {
   console.log(arg);  // prints "ping"
   event.sender.send('asynchronous-reply', 'pong');
 });
 
-ipcMain.on('synchronous-message', function(event, arg) {
+require('ipc').on('synchronous-message', function(event, arg) {
   console.log(arg);  // prints "ping"
   event.returnValue = 'pong';
 });
@@ -33,13 +32,12 @@ ipcMain.on('synchronous-message', function(event, arg) {
 
 ```javascript
 // In renderer process (web page).
-const ipcRenderer = require('electron').ipcRenderer;
 console.log(ipcRenderer.sendSync('synchronous-message', 'ping')); // prints "pong"
 
-ipcRenderer.on('asynchronous-reply', function(event, arg) {
+require('ipc').on('asynchronous-reply', function(event, arg) {
   console.log(arg); // prints "pong"
 });
-ipcRenderer.send('asynchronous-message', 'ping');
+require('ipc').send('asynchronous-message', 'ping');
 ```
 
 ## Listening for Messages
